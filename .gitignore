@@ -1,0 +1,31 @@
+# Compiled Object files
+*.o
+*.obj
+*.so
+*.dll
+*.exe
+*.out
+*.a
+*.lib
+
+# Debugging files
+*.log
+
+# Build directories
+/build/
+/bin/
+/lib/
+/output/
+
+# IDE and editor files
+.vscode/
+
+# Autotools
+*.d
+
+# Temporary files
+*.tmp
+*.temp
+
+# Program data
+/data/
