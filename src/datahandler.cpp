@@ -77,3 +77,62 @@ size_t writeCallback(void* contents, size_t size, size_t nmemb, void* userp)
     file->write(static_cast<char*>(contents), totalSize);
     return totalSize;
 }
+
+bool downloadData(const std::string& function = "", const std::string& symbol = "", const std::string& extraOptions = "", const std::string& dataType = "json", const std::string& apiKey = "demo")
+{
+    const std::string& fileName = function;
+    const std::string folderPath = mergeFolderPath(dataType, symbol);
+    
+    if (!makeDirectory(folderPath)) {
+        std::cerr << "DOWNLOAD_DATA ERROR: Failed to create folder path \"" << folderPath << "\"" << std::endl;
+        return false;
+    }
+
+    CURL* curl;
+    CURLcode res;
+    curl = curl_easy_init();
+    if (curl)
+    {
+        std::string fullFilePath = folderPath + folderDelimiter + fileName;
+        std::ofstream file(fullFilePath, std::ios::binary);
+        if (!file.is_open()) {
+            std::cerr << "DOWNLOAD_DATA ERROR: Could not open file to write at \""  << fullFilePath << "\"" << std::endl;
+            return false;
+        }
+
+        const std::string url = mergeURL(function, symbol, apiKey, extraOptions);
+        std::cout << url << std::endl;
+        if (url.empty()) return false;
+
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &file);
+        
+        res = curl_easy_perform(curl);
+        long httpCode = 0;
+        curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode); // Get HTTP response code
+        
+        if (res != CURLE_OK || httpCode != 200) {
+            std::cerr << "DOWNLOAD_DATA ERROR: Curl failed - " << curl_easy_strerror(res) 
+                      << " HTTP Code: " << httpCode << std::endl;
+            curl_easy_cleanup(curl);
+            return false;
+        }
+
+        curl_easy_cleanup(curl);
+        file.close();
+        
+        std::ifstream checkFile(fullFilePath, std::ios::binary | std::ios::ate);
+        if (checkFile.tellg() == 0) {
+            std::cerr << "DOWNLOAD_DATA ERROR: Downloaded file is empty at \"" << fullFilePath << "\"" << std::endl;
+            return false;
+        }
+
+        return true;
+    }
+    else
+    {
+        std::cerr << "DOWNLOAD_DATA ERROR: Curl initialization failed." << std::endl;
+    }
+    return false;
+}

@@ -42,5 +42,6 @@ const std::string readApiKey(const std::string&);
 
 bool makeDirectory(const std::string&);
 size_t writeCallback(void*, size_t, size_t, void*);
+bool downloadData(const std::string&, const std::string&, const std::string&, const std::string&, const std::string&);
 
 #endif
