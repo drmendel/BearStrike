@@ -40,4 +40,6 @@ const std::string mergeFolderPath(const std::string&, const std::string&);
 
 const std::string readApiKey(const std::string&);
 
+bool makeDirectory(const std::string&);
+
 #endif

@@ -51,3 +51,21 @@ const std::string readApiKey(const std::string& filePath)
     file.close();
     return buffer.str();
 }
+
+bool makeDirectory(const std::string& folderPath)
+{
+    try
+    {
+        if (!std::filesystem::exists(folderPath))
+        {
+            std::filesystem::create_directories(folderPath);
+            return true;
+        }
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << "MAKE_DIRECTORY ERROR: " << e.what() << '\n';
+        return false;
+    }
+    return true;
+}
