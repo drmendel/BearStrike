@@ -69,3 +69,11 @@ bool makeDirectory(const std::string& folderPath)
     }
     return true;
 }
+
+size_t writeCallback(void* contents, size_t size, size_t nmemb, void* userp)
+{
+    std::ofstream* file = static_cast<std::ofstream*>(userp);
+    size_t totalSize = size * nmemb;
+    file->write(static_cast<char*>(contents), totalSize);
+    return totalSize;
+}
