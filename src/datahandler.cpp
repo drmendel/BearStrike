@@ -37,3 +37,17 @@ const std::string mergeFolderPath(const std::string& dataType = "", const std::s
     }
     return baseFilePath + folderDelimiter + dataType + folderDelimiter + symbol;
 }
+
+const std::string readApiKey(const std::string& filePath)
+{
+    std::ifstream file(filePath);
+    if(!file.is_open())
+    {
+        std::cerr << "READ_API_KEY ERROR: Could not open API KEY file at \"" << filePath << "\"" << std::endl; 
+        return "";
+    }
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    file.close();
+    return buffer.str();
+}

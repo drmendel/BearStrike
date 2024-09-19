@@ -38,4 +38,6 @@ const std::string apiKeyPath = "data" + std::string(folderDelimiter) + ".apikey"
 const std::string mergeURL(const std::string&, const std::string&, const std::string&, const std::string&);
 const std::string mergeFolderPath(const std::string&, const std::string&);
 
+const std::string readApiKey(const std::string&);
+
 #endif
